@@ -1,43 +1,53 @@
 package org.example;
 
 public class Player {
+
     private String name;
+
     private int healthPercentage;
+
     private Weapon weapon;
 
-
-    public Player(String name, int healthPercentage, Weapon weapon) {
+    public Player(String name, int healthPercentage, Weapon weapon){
         this.name = name;
+        this.healthPercentage = healthPercentage;
+        checkAndSetHealth(healthPercentage);
         this.weapon = weapon;
-        this.healthPercentage = (healthPercentage > 100) ? 100 : (healthPercentage < 0) ? 0 : healthPercentage;
     }
 
-
-    public int getHealthPercentage() {
-        return healthPercentage;
+    private void checkAndSetHealth(int healthPercentage) {
+        if (healthPercentage < 0){
+            this.healthPercentage = 0;
+        }
+        if (healthPercentage > 100){
+            this.healthPercentage = 100;
+        }
     }
 
-
-    public int healthRemaining() {
-        return healthPercentage;
+    public int healthRemaining(){
+        return this.healthPercentage;
     }
-
 
     public void loseHealth(int damage) {
-        healthPercentage -= damage;
-        if (healthPercentage < 0) {
-            healthPercentage = 0;
+        int healthRemain = healthPercentage - damage;
+        if (healthRemain <= 0){
+            System.out.println(name + " player has been knocked out of game");
         }
-        if (healthPercentage == 0) {
-            System.out.println(String.format("%s player has been knocked out of game", name)); // Cleaner format
-        }
+        healthPercentage = healthRemain;
+        checkAndSetHealth(healthPercentage);
     }
 
-    // Method to restore health. If health exceeds 100, it's set to 100.
-    public void restoreHealth(int healthPotion) {
-        healthPercentage += healthPotion;
-        if (healthPercentage > 100) {
-            healthPercentage = 100;
-        }
+    public void restoreHealth(int healthPotion){
+        this.healthPercentage += healthPotion;
+        checkAndSetHealth(this.healthPercentage);
+    }
+
+    @Override
+    public String toString() {
+        return "Player{" +
+                "name='" + name + '\'' +
+                ", healthPercentage=" + healthPercentage +
+                ", weapon=" + weapon +
+                '}';
     }
 }
